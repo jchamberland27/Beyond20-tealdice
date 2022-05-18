@@ -23,6 +23,7 @@ function sendMessageTo(url, request, failure = null) {
         if (failure)
             failure(tabs.length === 0)
         for (let tab of tabs)
+            console.log(tab)
             chrome.tabs.sendMessage(tab.id, request)
     })
 }
@@ -65,6 +66,23 @@ function sendMessageToRoll20(request, limit = null, failure = null) {
         }
     } else {
         sendMessageTo(ROLL20_URL, request, failure = failure)
+    }
+}
+
+function sendMessageToTealDice(request, limit = null, failure = null) {
+    if (limit) {
+        const vtt = limit.vtt || "tealdice"
+        if (vtt ==  "tealdice") {
+            chrome.tabs.query({ "url": TEALDICE_URL }, (tabs) => {
+                found = filterVTTTab(request, limit, tabs, roll20Title)
+                if (failure)
+                    failure(!found)
+            })
+        } else {
+            failure(true)
+        }
+    } else {
+        sendMessageTo(TEALDICE_URL, request, failure = failure)
     }
 }
 
@@ -183,8 +201,8 @@ function onMessage(request, sender, sendResponse) {
             return (result) => {
                 trackFailure[vtt] = result
                 console.log("Result of sending to VTT ", vtt, ": ", result)
-                if (trackFailure["roll20"] !== null && trackFailure["fvtt"] !== null && trackFailure["astral"] !== null) {
-                    if (trackFailure["roll20"] == true && trackFailure["fvtt"] == true && trackFailure["astral"] == true) {
+                if (trackFailure["roll20"] !== null && trackFailure["fvtt"] !== null && trackFailure["astral"] !== null && trackFailure["tealdice"] !== null) {
+                    if (trackFailure["roll20"] == true && trackFailure["fvtt"] == true && trackFailure["astral"] == true && trackFailure["tealdice"] == true) {
                         onRollFailure(request, sendResponse)
                     } else {
                         const vtts = []
@@ -198,11 +216,12 @@ function onMessage(request, sender, sendResponse) {
                 }
             }
         }
-        const trackFailure = { "roll20": null, "fvtt": null, 'astral': null }
+        const trackFailure = { "roll20": null, "fvtt": null, 'astral': null, 'tealdice' : null }
         if (settings["vtt-tab"] && settings["vtt-tab"].vtt === "dndbeyond") {
             sendResponse({ "success": false, "vtt": "dndbeyond", "error": null, "request": request })
         } else {
             sendMessageToRoll20(request, settings["vtt-tab"], failure = makeFailureCB(trackFailure, "roll20", sendResponse))
+            sendMessageToTealDice(request, settings["vtt-tab"], failure = makeFailureCB(trackFailure, "tealdice", sendResponse))
             sendMessageToFVTT(request, settings["vtt-tab"], failure = makeFailureCB(trackFailure, "fvtt", sendResponse))
             sendMessageToAstral(request, settings["vtt-tab"], failure = makeFailureCB(trackFailure, "astral", sendResponse))
         }
@@ -211,6 +230,7 @@ function onMessage(request, sender, sendResponse) {
         if (request.type == "general")
             updateSettings(request.settings)
         sendMessageToRoll20(request)
+        sendMessageToTealDice(request)
         sendMessageToBeyond(request)
         sendMessageToFVTT(request)
         sendMessageToAstral(request)

@@ -1,8 +1,8 @@
 {
-	"name": "Beyond 20",
+	"name": "Beyond 20 with teal dice",
 	"version": "2.6.3",
 	"manifest_version": 2,
-	"description": "Integrates the D&D Beyond Character Sheets with Roll20 and Foundry VTT.",
+	"description": "Integrates the D&D Beyond Character Sheets with Roll20 and Foundry VTT. Builds on beyond20 functionality by adding teal-dice support.",
 	"permissions": [
 		"activeTab",
 		"tabs",
@@ -11,7 +11,8 @@
 		"*://app.roll20.net/editor/",
 		"*://*.dndbeyond.com/*",
 		"*://*.forge-vtt.com/game",
-		"*://*.astraltabletop.com/play/*"
+		"*://*.astraltabletop.com/play/*",
+		"*://*.tealdice.html*"
 	],
     "optional_permissions": ["*://*/"],
 	"browser_specific_settings": {

@@ -1,0 +1,1 @@
+console.log("Beyond20: TealDice module loaded.");
