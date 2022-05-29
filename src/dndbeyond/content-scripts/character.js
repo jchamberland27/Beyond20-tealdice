@@ -509,7 +509,16 @@ function handleSpecialGeneralAttacks(damages=[], damage_types=[], properties, se
             character.hasClassFeature("Genie’s Vessel") &&
             character.getSetting("genies-vessel", false)) {
             damages.push(character._proficiency);
-            damage_types.push("Genie's Wrath");
+            if (character.hasClassFeature("Genie’s Vessel: Genie's Wrath (Dao)"))
+                damage_types.push("Genie's Wrath (Bludgeoning)");
+            else if (character.hasClassFeature("Genie’s Vessel: Genie's Wrath (Djinni)"))
+                damage_types.push("Genie's Wrath (Thunder)");
+            else if (character.hasClassFeature("Genie’s Vessel: Genie's Wrath (Efreeti)"))
+                damage_types.push("Genie's Wrath (Fire)");
+            else if (character.hasClassFeature("Genie’s Vessel: Genie's Wrath (Marid)"))
+                damage_types.push("Genie's Wrath (Cold)");
+            else
+                damage_types.push("Genie's Wrath");
         }
 
         // Warlock: The Undead: Grave Touched
@@ -587,7 +596,7 @@ function handleSpecialWeaponAttacks(damages=[], damage_types=[], properties, set
         if (character.getSetting("bloodhunter-crimson-rite", false) &&
             character.hasClassFeature("Crimson Rite") &&
             ((properties["Attack Type"] == "Ranged" || properties["Attack Type"] == "Melee") ||
-            action_name.includes("Predatory Strike"))) {
+            action_name.includes("Predatory Strike") || action_name.includes("Polearm Master"))) {
             const bloodhunter_level = character.getClassLevel("Blood Hunter");
             if (bloodhunter_level > 0) {
                 let rite_die = "1d4";
