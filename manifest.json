@@ -12,7 +12,7 @@
 		"*://*.dndbeyond.com/*",
 		"*://*.forge-vtt.com/game",
 		"*://*.astraltabletop.com/play/*",
-		"*://*.tealdice.html*"
+		"*tealdice.html*"
 	],
     "optional_permissions": ["*://*/"],
 	"icons": {
@@ -189,7 +189,7 @@
 		},
 		{
 			"matches": [
-				"*://*.tealdice.html/*"
+				"file:///*tealdice.html*"
 			],
 			"css": [
 				"libs/css/alertify.css",
